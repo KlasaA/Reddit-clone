@@ -1,31 +1,36 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button, Input } from "../common/components";
-import FileBase from "react-file-base64";
+import { getBase64 } from "../utils/getBase64";
 
 const PostForm = ({ service, fetchPosts }) => {
   const intialState = { image: "", title: "" };
   const [content, setContent] = useState(intialState);
+  const fileInputRef = useRef();
 
   const handleChange = (e) => {
     setContent({ ...content, title: e.target.value });
   };
 
+  const setImage = (image) => {
+    setContent({ ...content, image });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userId = JSON.parse(window.sessionStorage.getItem("User"))._id;
-
     try {
       await service.post({
         content: content,
         userId,
       });
       fetchPosts();
-      setContent({ ...content, image: "", title: "" });
+      setContent(intialState);
+      fileInputRef.current.value = "";
     } catch (error) {
       console.log(error);
     }
   };
-  debugger;
+
   return (
     <form>
       <Input
@@ -37,11 +42,12 @@ const PostForm = ({ service, fetchPosts }) => {
         placeholder="Enter Title"
         value={content.title}
       />
-      <FileBase
+      <input
         type="file"
         multiple={false}
-        onDone={({ base64 }) => {
-          setContent({ ...content, image: base64 });
+        ref={fileInputRef}
+        onChange={(props) => {
+          const image = getBase64(props.target.files[0], setImage);
         }}
       />
       <Button

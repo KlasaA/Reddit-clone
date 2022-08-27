@@ -1,9 +1,9 @@
 import { Api } from "./";
 
-class UserRouteService extends Api {
+class PostRouteService extends Api {
   constructor(endpoint) {
     super(endpoint);
   }
 }
 
-export default UserRouteService;
+export default PostRouteService;

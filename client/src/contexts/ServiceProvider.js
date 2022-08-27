@@ -1,9 +1,14 @@
 import React, { createContext } from "react";
-import { UserRouteService, PostRouteService } from "../services";
+import {
+  UserRouteService,
+  PostRouteService,
+  CommentRouteService,
+} from "../services";
 
 const services = {
   userRouteService: new UserRouteService("users"),
-  postRouteService: new PostRouteService("posts"),
+  postRouteService: new PostRouteService("posts/"),
+  commentRouteService: new CommentRouteService("comments/"),
 };
 
 export const ServiceContext = createContext({ services: null });

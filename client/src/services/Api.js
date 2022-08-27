@@ -11,7 +11,7 @@ class Api {
     return await axios.get(this.baseUrl);
   }
 
-  async update(payload) {
+  async put(payload) {
     return await axios.put(this.baseUrl, payload);
   }
 
@@ -20,7 +20,8 @@ class Api {
   }
 
   async delete(payload) {
-    return await axios.delete(this.baseUrl, payload);
+    const baseUrl = this.baseUrl + payload;
+    return await axios.delete(baseUrl, payload);
   }
 }
 

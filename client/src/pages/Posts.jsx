@@ -1,18 +1,24 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import PostForm from "../forms/PostForm";
 import { ServiceContext } from "../contexts/ServiceProvider";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button, Post } from "../common/components";
 
 const Posts = () => {
   const { postRouteService } = useContext(ServiceContext);
-
   const [user, setUser] = useState({ email: "", admin: false });
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
+  //pretvoriti koment i button section u formu
+
+  const logOut = () => {
+    window.sessionStorage.removeItem("User");
+    navigate("/");
+  };
 
   useEffect(() => {
     fetchPosts();
     const userData = JSON.parse(window.sessionStorage.getItem("User"));
-
     setUser(userData);
   }, []);
 
@@ -23,16 +29,25 @@ const Posts = () => {
 
   return (
     <div>
-      <h3>{user.email}</h3>
-      <p>{user.admin ? "Admin" : "User"}</p>
+      <h3 className="userEmail">
+        {user.email}
+        <span className="userStatus">{user.admin ? "Admin" : "User"}</span>
+      </h3>
+      <Button className="logOutButton" label="Log out" onClick={logOut} />
       <PostForm service={postRouteService} fetchPosts={fetchPosts} />
 
-      {posts.map((post) => (
-        <div key={post._id}>
-          <h1>{post.content.title}</h1>
-          <img src={post.content.image} />
-        </div>
-      ))}
+      {posts.length > 0 && (
+        <>
+          {posts.map((post) => (
+            <Post
+              data={post}
+              user={user}
+              service={postRouteService}
+              fetchPosts={fetchPosts}
+            />
+          ))}
+        </>
+      )}
     </div>
   );
 };

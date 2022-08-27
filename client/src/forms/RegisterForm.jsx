@@ -2,12 +2,12 @@ import React, { useState, useContext } from "react";
 import { Button, Input, Header } from "../common/components";
 import { ServiceContext } from "../contexts/ServiceProvider";
 
-const RegisterForm = () => {
+const RegisterForm = ({ handleToastMessage, toggle, setToggle }) => {
   const [formValues, setFormValues] = useState({
     userName: "",
     email: "",
     password: "",
-    admin: true,
+    admin: false,
   });
   const [errorMesage, setErrorMesage] = useState("");
   const { userRouteService } = useContext(ServiceContext);
@@ -20,6 +20,8 @@ const RegisterForm = () => {
     event.preventDefault();
     try {
       await userRouteService.postSignUp(formValues);
+      handleToastMessage();
+      setToggle(!toggle);
     } catch (error) {
       setErrorMesage(error.response.data.message);
     }
@@ -53,7 +55,8 @@ const RegisterForm = () => {
         placeholder="Enter Password"
       />
       <Button type="submit" className="--button" label="Register" />
-      <p>{errorMesage}</p>
+
+      <p className="errMsg">{errorMesage}</p>
     </form>
   );
 };
