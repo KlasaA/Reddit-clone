@@ -3,7 +3,6 @@ import { ServiceContext } from "../../contexts/ServiceProvider";
 import Button from "./Button";
 import Input from "./Input";
 
-
 const Comment = ({ data, user, fetchPosts }) => {
   const { commentRouteService } = useContext(ServiceContext);
   const [comment, setComment] = useState("");
@@ -13,12 +12,12 @@ const Comment = ({ data, user, fetchPosts }) => {
   };
 
   const submitComment = async () => {
-    await commentRouteService.post({
-      content: comment,
-      userId: user._id,
-      timeStamp: new Date(),
-      postId: data._id,
-    });
+      await commentRouteService.post({
+        content: comment,
+        userId: user._id,
+        timeStamp: new Date(),
+        postId: data._id,
+      });
     await fetchPosts();
     setComment("");
   };
