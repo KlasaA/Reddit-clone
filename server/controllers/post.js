@@ -40,6 +40,14 @@ export const getPosts = async (req, res) => {
 };
 
 export const deletePost = async (req, res) => {
+  const deletePost = await Post.findOne({ _id: req.params.id });
+  if (deletePost.comments.length > 0) {
+    await Comment.remove({
+      _id: {
+        $in: deletePost.comments,
+      },
+    });
+  }
   Post.findByIdAndRemove({ _id: req.params.id }).then(function (post) {
     res.send(post);
   });
