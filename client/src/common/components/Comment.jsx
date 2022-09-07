@@ -13,8 +13,8 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
     setUpdatedComment(e.target.value);
   };
 
-  const deleteComment = async (id) => {
-    await commentRouteService.delete({ id, postId });
+  const deleteComment = async ({ replyId, commentId, postId }) => {
+    await commentRouteService.delete({ replyId, commentId, postId });
     fetchPosts();
   };
 
@@ -23,6 +23,7 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
   };
 
   const editComment = async () => {
+    setReadOnly(!readOnly);
     await commentRouteService.put({
       updatedContent: updatedComment,
       commentId: data._id,
@@ -42,10 +43,6 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
         value={updatedComment}
       />
 
-      {data.replies.map((reply) => (
-        <Reply data={reply} user={user} />
-      ))}
-
       {data.userId === user._id && (
         <Button
           label={readOnly ? "edit" : "submit"}
@@ -55,9 +52,24 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
       {(data.userId === user._id || user.admin) && (
         <Button
           label="delete Comment"
-          onClick={() => deleteComment(data._id)}
+          onClick={() => deleteComment({ commentId: data._id, postId: postId })}
         />
       )}
+
+      {data.replies.map((reply) => (
+        <Reply
+          data={reply}
+          user={user}
+          deleteComment={deleteComment}
+          postId={postId}
+          commentId={data._id}
+          editComment={editComment}
+          handleCommentChange={handleCommentChange}
+          updatedComment={updatedComment}
+          fetchPosts={fetchPosts}
+        />
+      ))}
+
       <CreateReply
         handleCommentChange={handleCommentChange}
         user={user}

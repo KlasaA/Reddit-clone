@@ -38,24 +38,40 @@ export const addComment = async (req, res) => {
 };
 
 export const deleteComment = async (req, res) => {
+  const { commentId, replyId, postId } = req.params;
   try {
-    const deleteComment = await Comment.find({ _id: req.params.id }).lean();
-    if (deleteComment[0].replies.length > 0) {
+    const deleteComment = await Comment.findOne({
+      _id: commentId,
+    });
+
+    if (replyId == "undefined") {
       await Comment.remove({
         _id: {
-          $in: deleteComment[0].replies,
+          $in: deleteComment.replies,
         },
       });
-    }
-    await Post.findOneAndUpdate(
-      { _id: req.params.postId },
-      { $pull: { comments: { $in: [req.params.id] } } },
-      { new: true }
-    );
+      //delete all replies for that comment in dataBase
 
-    Comment.findByIdAndRemove({ _id: req.params.id }).then(function (comment) {
-      res.send(comment).json();
-    });
+      await Post.findOneAndUpdate(
+        { _id: postId },
+        { $pull: { comments: { $in: [commentId] } } },
+        { new: true }
+      );
+
+      Comment.findByIdAndRemove({ _id: commentId }).then(function (comment) {
+        res.send(comment).json();
+      });
+    } else {
+      await Comment.findOneAndUpdate(
+        { _id: commentId },
+        { $pull: { replies: { $in: [replyId] } } },
+        { new: true }
+      );
+
+      Comment.findByIdAndRemove({ _id: replyId }).then(function (reply) {
+        res.send(reply).json();
+      });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

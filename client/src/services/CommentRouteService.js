@@ -6,8 +6,8 @@ class CommentRouteService extends Api {
     super(endpoint);
   }
   async delete(payload) {
-    const { id, postId } = payload;
-    const baseUrl = `${this.baseUrl}${id}/${postId}`;
+    const { commentId, replyId, postId } = payload;
+    const baseUrl = `${this.baseUrl}${commentId}/${replyId}/${postId}`;
     return await axios.delete(baseUrl, payload);
   }
 }

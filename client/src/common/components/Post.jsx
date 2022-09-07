@@ -1,5 +1,6 @@
 import React from "react";
 import { CreateComment, Button, Comment } from ".";
+import { AiOutlineHeart } from "react-icons/fa";
 
 const Post = ({ data, user, service, fetchPosts }) => {
   const deletePost = async (id) => {
@@ -28,9 +29,15 @@ const Post = ({ data, user, service, fetchPosts }) => {
           <h1 className="postHeader">{data.content.title}</h1>
           <img className="postImage" alt="" src={data.content.image} />
           {data.comments.map((comment) => (
-            <Comment data={comment} user={user} fetchPosts={fetchPosts} postId={data._id} />
+            <Comment
+              data={comment}
+              user={user}
+              fetchPosts={fetchPosts}
+              postId={data._id}
+            />
           ))}
           <CreateComment data={data} user={user} fetchPosts={fetchPosts} />
+          <AiOutlineHeart />
         </div>
       )}
     </>
