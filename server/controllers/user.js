@@ -1,13 +1,14 @@
 import User from "../models/user.js";
-
+import bcrypt from "bcryptjs";
 export const signUp = async (req, res) => {
   const { userName, email, password, admin } = req.body;
 
   try {
+    const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
       userName,
       email,
-      password,
+      hashedPassword,
       admin,
     });
     res.status(201).json(newUser);
@@ -30,18 +31,18 @@ export const signIn = async (req, res) => {
       return res
         .status(400)
         .json({ message: "User with that email doesen't exist!" });
+    } else {
+      const correctPassword = bcrypt.compareSync(password, user.hashedPassword);
+      if (!correctPassword) {
+        return res.status(400).json({ message: "Password is incorrect!" });
+      } else {
+        res.status(200).json(user);
+      }
     }
-    if (user.password != password) {
-      return res.status(400).json({ message: "Password is incorrect!" });
-    }
-    
-    res.status(200).json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-
-
 
 // spremiti podatke dobivine sa frontenda u varijablu
 // vidjeti je li postoji user sa tim mailom u bazi
