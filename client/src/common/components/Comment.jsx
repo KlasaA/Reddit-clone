@@ -1,13 +1,15 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { ServiceContext } from "../../contexts/ServiceProvider";
 import { Button, Input } from ".";
 import CreateReply from "./CreateReply";
 import Reply from "./Reply";
+import formatDate from "../../utils/formatDate";
 
 const Comment = ({ data, user, fetchPosts, postId }) => {
   const { commentRouteService } = useContext(ServiceContext);
   const [readOnly, setReadOnly] = useState(true);
   const [updatedComment, setUpdatedComment] = useState(data.content);
+  const commentInputRef = useRef(null);
 
   const handleCommentChange = async (e) => {
     setUpdatedComment(e.target.value);
@@ -20,6 +22,8 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
 
   const handleReadOnly = async () => {
     setReadOnly(!readOnly);
+    debugger;
+    commentInputRef.current.focus();
   };
 
   const editComment = async () => {
@@ -33,31 +37,49 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
   };
 
   return (
-    <>
-      <p>{data?.user?.userName}</p>
-      <p>{data?.timeStamp}</p>
+    <div>
+      <div className="commentWrap">
+        <p className="commentedBy">{data?.user?.userName}</p>
 
-      <Input
-        onChange={(e) => handleCommentChange(e)}
-        readOnly={readOnly}
-        value={updatedComment}
+        <Input
+          passDownRef={commentInputRef}
+          onChange={(e) => handleCommentChange(e)}
+          readOnly={readOnly}
+          value={updatedComment}
+          placeholder="test"
+          className="comment"
+        />
+      </div>
+      <div className="displayFlex mt10">
+        <p class="commentDate">{formatDate(data?.timeStamp)}</p>
+
+        {data.userId === user._id && (
+          <Button
+            className="secondaryButton"
+            label={readOnly ? "Edit" : "Submit"}
+            onClick={() => (readOnly ? handleReadOnly() : editComment())}
+          />
+        )}
+        {(data.userId === user._id || user.admin) && (
+          <Button
+            className="secondaryButton"
+            label="Delete"
+            onClick={() =>
+              deleteComment({ commentId: data._id, postId: postId })
+            }
+          />
+        )}
+      </div>
+      <CreateReply
+        handleCommentChange={handleCommentChange}
+        user={user}
+        fetchPosts={fetchPosts}
+        /* data={replies} */ comment={data}
       />
-
-      {data.userId === user._id && (
-        <Button
-          label={readOnly ? "edit" : "submit"}
-          onClick={() => (readOnly ? handleReadOnly() : editComment())}
-        />
-      )}
-      {(data.userId === user._id || user.admin) && (
-        <Button
-          label="delete Comment"
-          onClick={() => deleteComment({ commentId: data._id, postId: postId })}
-        />
-      )}
 
       {data.replies.map((reply) => (
         <Reply
+          className="replyContainer"
           data={reply}
           user={user}
           deleteComment={deleteComment}
@@ -69,14 +91,7 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
           fetchPosts={fetchPosts}
         />
       ))}
-
-      <CreateReply
-        handleCommentChange={handleCommentChange}
-        user={user}
-        fetchPosts={fetchPosts}
-        /* data={replies} */ comment={data}
-      />
-    </>
+    </div>
   );
 };
 

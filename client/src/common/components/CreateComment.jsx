@@ -12,12 +12,12 @@ const Comment = ({ data, user, fetchPosts }) => {
   };
 
   const submitComment = async () => {
-      await commentRouteService.post({
-        content: comment,
-        userId: user._id,
-        timeStamp: new Date(),
-        postId: data._id,
-      });
+    await commentRouteService.post({
+      content: comment,
+      userId: user._id,
+      timeStamp: new Date(),
+      postId: data._id,
+    });
     await fetchPosts();
     setComment("");
   };
@@ -28,6 +28,7 @@ const Comment = ({ data, user, fetchPosts }) => {
         onChange={(e) => handleCommentChange(e)}
         className="commentInput"
         value={comment}
+        placeholder="Comment..."
       />
       <Button
         onClick={() => submitComment(data)}

@@ -32,13 +32,13 @@ const PostForm = ({ service, fetchPosts }) => {
   };
 
   return (
-    <form>
+    <form className="newPost">
       <Input
         onChange={(e) => handleChange(e)}
         className="--title"
         type="text"
         id="title"
-        label="title"
+        label="Title"
         placeholder="Enter Title"
         value={content.title}
       />

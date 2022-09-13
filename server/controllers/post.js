@@ -47,6 +47,7 @@ export const deletePost = async (req, res) => {
         $in: deletePost.comments,
       },
     });
+
   }
   Post.findByIdAndRemove({ _id: req.params.id }).then(function (post) {
     res.send(post);

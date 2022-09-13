@@ -28,19 +28,20 @@ const CreateReply = ({ user, fetchPosts, data, comment }) => {
   };
 
   return (
-    <>
+    <div className="createReplyWrap">
       {toggleReply && (
         <>
-          <Input onChange={(e) => handleCommentChange(e)} />
+          <Input className="replyInput" onChange={(e) => handleCommentChange(e)} />
         </>
       )}
       <Button
-        label={toggleReply ? "submit reply" : "reply"}
+        className="secondaryButton mlpl0"
+        label={toggleReply ? "Submit Reply" : "Reply"}
         onClick={() => {
           toggleReply ? submitReply() : handleReplyToggle();
         }}
       />
-    </>
+    </div>
   );
 };
 

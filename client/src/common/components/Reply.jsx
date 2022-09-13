@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { ServiceContext } from "../../contexts/ServiceProvider";
 import Button from "./Button";
 import Input from "./Input";
+import formatDate from "../../utils/formatDate";
 
 const Reply = ({
   data,
@@ -10,11 +11,13 @@ const Reply = ({
   postId,
   commentId,
   fetchPosts,
+  className,
 }) => {
   const { commentRouteService } = useContext(ServiceContext);
 
   const [readOnly, setReadOnly] = useState(true);
   const [updatedReply, setUpdatedReply] = useState(data.content);
+  const commentInputRef = useRef(null);
 
   const handleReplyChange = async (e) => {
     setUpdatedReply(e.target.value);
@@ -22,6 +25,7 @@ const Reply = ({
 
   const handleReadOnly = async () => {
     setReadOnly(!readOnly);
+    commentInputRef.current.focus();
   };
 
   const editReply = async () => {
@@ -35,36 +39,45 @@ const Reply = ({
   };
 
   return (
-    <>
-      <p>{data.user.userName}</p>
-      <p>{data.timeStamp}</p>
+    <div className={className}>
+      <div className="replyWrap">
+        <p className="repliedBy">{data.user.userName}</p>
 
-      <Input
-        onChange={(e) => handleReplyChange(e)}
-        readOnly={readOnly}
-        value={updatedReply}
-      />
-
-      {(data.userId === user._id || user.admin) && (
-        <Button
-          label="delete Comment"
-          onClick={() =>
-            deleteComment({
-              replyId: data._id,
-              postId: postId,
-              commentId: commentId,
-            })
-          }
+        <Input
+          passDownRef={commentInputRef}
+          onChange={(e) => handleReplyChange(e)}
+          readOnly={readOnly}
+          value={updatedReply}
+          className="reply"
         />
-      )}
+      </div>
 
-      {(data.userId === user._id || user.admin) && (
-        <Button
-          label={readOnly ? "edit" : "submit"}
-          onClick={() => (readOnly ? handleReadOnly() : editReply())}
-        />
-      )}
-    </>
+      <div className="displayFlex mt10">
+        <p className="commentDate">{formatDate(data.timeStamp)}</p>
+
+        {(data.userId === user._id || user.admin) && (
+          <Button
+            className="secondaryButton"
+            label="delete"
+            onClick={() =>
+              deleteComment({
+                replyId: data._id,
+                postId: postId,
+                commentId: commentId,
+              })
+            }
+          />
+        )}
+
+        {(data.userId === user._id || user.admin) && (
+          <Button
+            className="secondaryButton"
+            label={readOnly ? "edit" : "submit"}
+            onClick={() => (readOnly ? handleReadOnly() : editReply())}
+          />
+        )}
+      </div>
+    </div>
   );
 };
 

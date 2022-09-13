@@ -2,19 +2,16 @@ import React, { useEffect, useContext, useState } from "react";
 import PostForm from "../forms/PostForm";
 import { ServiceContext } from "../contexts/ServiceProvider";
 import { useNavigate } from "react-router-dom";
-import { Button, Post } from "../common/components";
+import { Button, Post, Navigation } from "../common/components";
 
 const Posts = () => {
   const { postRouteService } = useContext(ServiceContext);
-  const [user, setUser] = useState({ email: "", admin: false });
+  const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const navigate = useNavigate();
   //pretvoriti koment i button section u formu
 
-  const logOut = () => {
-    window.sessionStorage.removeItem("User");
-    navigate("/");
-  };
+
 
   useEffect(() => {
     fetchPosts();
@@ -29,11 +26,8 @@ const Posts = () => {
 
   return (
     <div>
-      <h3 className="userEmail">
-        {user.email}
-        <span className="userStatus">{user.admin ? "Admin" : "User"}</span>
-      </h3>
-      <Button className="logOutButton" label="Log out" onClick={logOut} />
+      <Navigation user={user} />
+   
       <PostForm service={postRouteService} fetchPosts={fetchPosts} />
 
       {posts.length > 0 && (

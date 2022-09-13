@@ -7,8 +7,8 @@ class Api {
     this.baseUrl = this.baseUrl + endpoint;
   }
 
-  async get() {
-    return await axios.get(this.baseUrl);
+  async get(payload) {
+    return await axios.get(this.baseUrl, payload);
   }
 
   async put(payload) {

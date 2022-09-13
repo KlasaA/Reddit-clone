@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Home, Posts } from "./pages";
+import { Home, Posts, Favorites } from "./pages";
 import { ServiceProvider } from "./contexts/ServiceProvider";
 
 function App() {
@@ -9,6 +9,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/posts" element={<Posts />} />
+          <Route path="/favorites" element={<Favorites />} />
         </Routes>
       </Router>
     </ServiceProvider>

@@ -9,6 +9,7 @@ const Input = ({
   type,
   id,
   readOnly,
+  passDownRef,
 }) => {
   return (
     <>
@@ -21,6 +22,7 @@ const Input = ({
         type={type}
         id={id}
         readOnly={readOnly}
+        ref={passDownRef}
       />
     </>
   );
