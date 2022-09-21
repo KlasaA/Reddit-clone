@@ -3,6 +3,7 @@ import { Button, Input, Header } from "../common/components";
 import { useNavigate } from "react-router-dom";
 import { ServiceContext } from "../contexts/ServiceProvider";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import ForgotPassword from "../forms/ForgotPassword";
 
 const LoginForm = () => {
   const [formValues, setFormValues] = useState({
@@ -14,6 +15,7 @@ const LoginForm = () => {
   const [errorMesage, setErrorMesage] = useState("");
   const { userRouteService } = useContext(ServiceContext);
   const [passwordShown, setPasswordShown] = useState(false);
+  const [toggle, setToggle] = useState(true);
 
   const navigate = useNavigate();
 
@@ -39,39 +41,51 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Header label="Login" />
-
-      <Input
-        onChange={(e) => handleChange(e)}
-        className="--input"
-        type="email"
-        id="email"
-        label="E-mail"
-        placeholder="Enter E-mail"
-      />
-      <div className="displayFlex">
-        <div className="w100">
+    <>
+      {toggle ? (
+        <form onSubmit={handleSubmit}>
+          <Header label="Login" />
           <Input
             onChange={(e) => handleChange(e)}
-            className="--input fa fa-eye"
-            type={passwordShown ? "text" : "password"}
-            id="password"
-            label="Password"
-            placeholder="Enter Password"
+            className="--input"
+            type="email"
+            id="email"
+            label="E-mail"
+            placeholder="Enter E-mail"
           />
-        </div>
-        {passwordShown && (
-          <FaEyeSlash onClick={passwordToggle} className="eyeIcon" />
-        )}
-        {!passwordShown && (
-          <FaEye onClick={passwordToggle} className="eyeIcon" />
-        )}
-      </div>
+          <div className="displayFlex">
+            <div className="w100">
+              <Input
+                onChange={(e) => handleChange(e)}
+                className="--input fa fa-eye"
+                type={passwordShown ? "text" : "password"}
+                id="password"
+                label="Password"
+                placeholder="Enter Password"
+              />
+            </div>
+            {passwordShown && (
+              <FaEyeSlash onClick={passwordToggle} className="eyeIcon" />
+            )}
+            {!passwordShown && (<FaEye onClick={passwordToggle} className="eyeIcon" />
+            )}
+          </div>
 
-      <Button type="submit" className="--button" label="Login" />
-      <p className="errMsg">{errorMesage}</p>
-    </form>
+          <Button type="submit" className="--button" label="Login" />
+
+          <p className="errMsg">{errorMesage}</p>
+          <Button
+            onClick={() => {
+              setToggle(!toggle);
+            }}
+            className="--button"
+            label={toggle ? "forgot password" : "back to login"}
+          />
+        </form>
+      ) : (
+        <ForgotPassword toggle={toggle} setToggle={setToggle} />
+      )}
+    </>
   );
 };
 

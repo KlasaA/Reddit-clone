@@ -1,3 +1,4 @@
+
 import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
@@ -5,8 +6,9 @@ const postSchema = new mongoose.Schema({
     image: { type: String, required: true },
     title: { type: String, required: true },
   },
-  comments: { type: [String] },
-  userId: { type: String },
+  timeStamp: { type: Date },
+  comments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Comment" }],
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
 export default mongoose.model("Post", postSchema);

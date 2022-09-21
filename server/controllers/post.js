@@ -1,14 +1,15 @@
 import Post from "../models/post.js";
 import User from "../models/user.js";
 import Comment from "../models/comment.js";
-import { mapCommentsToPosts } from "./comments.js";
+
 export const createPost = async (req, res) => {
-  const { content, userId } = req.body;
+  const { content, userId, timeStamp } = req.body;
   try {
     const newPost = await Post.create({
       content,
       comments: [],
       userId,
+      timeStamp,
     });
     res.status(201).json(newPost);
   } catch (error) {
@@ -16,26 +17,34 @@ export const createPost = async (req, res) => {
   }
 };
 
+// rpp = resources per page
+// body = JSON, raw, text, form
+//query = ?varijabla=NEŠTO&varijabla2=NEŠTO2&
+//params = /:userID URL-u /lsjkbfdagksb
+
+//GET -- NEMA body
 export const getPosts = async (req, res) => {
+  const { page, pageSize } = req.query;
+
   try {
-    let posts = await Post.find({}).lean(); // find all posts
-    posts = await mapCommentsToPosts(posts);
+    const posts = await Post.find({})
+      .sort({ timeStamp: "desc" })
+      .limit(pageSize)
+      .skip((page - 1) * pageSize)
+      .populate("userId")
+      .populate("comments")
+      .populate({ path: "comments", populate: { path: "userId" } })
+      .populate({ path: "comments", populate: { path: "replies" } })
+      .populate({
+        path: "comments",
+        populate: { path: "replies", populate: { path: "userId" } },
+      });
+    const numberOfPosts = await Post.countDocuments();
+    const numOfPages = Math.ceil(numberOfPosts / pageSize);
 
-    const postUsers = await User.find({
-      _id: { $in: [...new Set(posts.map((post) => post.userId))] },
-    }).lean(); // pronalazim sve usere iz fetchanih postova
-
-    const mappedPosts = posts.map((post) => {
-      const postUser = postUsers.find(
-        (user) => String(user._id) == post.userId
-      );
-      post.user = postUser;
-      return post;
-    }); // map user model to post
-
-    res.status(200).json(mappedPosts.reverse());
+    res.status(200).json({ posts, numOfPages });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -47,13 +56,10 @@ export const deletePost = async (req, res) => {
         $in: deletePost.comments,
       },
     });
-
   }
   Post.findByIdAndRemove({ _id: req.params.id }).then(function (post) {
     res.send(post);
   });
 };
 
-//mapiram kroz sve postove
-//usporedim od svakog posta comments id sa komentarima u bazi
-//vratim sve te komentare na frontend
+

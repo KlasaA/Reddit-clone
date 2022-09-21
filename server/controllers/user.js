@@ -1,7 +1,8 @@
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
+import nodemailer from "nodemailer";
 export const signUp = async (req, res) => {
-  const { userName, email, password, admin } = req.body;
+  const { userName, email, password, admin, confirmPassword } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -11,7 +12,11 @@ export const signUp = async (req, res) => {
       hashedPassword,
       admin,
     });
-    res.status(201).json(newUser);
+    if (password === confirmPassword) {
+      res.status(201).json(newUser);
+    } else {
+      return res.status(400).json({ message: "Password do not match" });
+    }
   } catch (error) {
     if (error.code == 11000) {
       return res
@@ -44,9 +49,56 @@ export const signIn = async (req, res) => {
   }
 };
 
-// spremiti podatke dobivine sa frontenda u varijablu
-// vidjeti je li postoji user sa tim mailom u bazi
-// ako ne postoji response neka bude message : "user doesen't exist"
-// ako postoji provjeriti je li dobiveni password isti kao u bazi
-// ako nisu response neka bude message: "wrong user/password"
-// ako je dobiveni password isti kao u bazi res.status(200) , vratim frontedu usera iz baze
+export const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const newPassword = Math.random().toString(36).slice(-8);
+  const hashedNewPassowrd = await bcrypt.hash(newPassword, 10);
+  try {
+    await User.findOneAndUpdate(
+      { email: email },
+      { hashedPassword: hashedNewPassowrd }
+    );
+    const testAccount = await nodemailer.createTestAccount();
+    const transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false,
+      auth: {
+        user: testAccount.user,
+        pass: testAccount.pass,
+      },
+    });
+
+    const mailOptions = {
+      from: "antonio.klasicek@gmail.com",
+      to: email,
+      subject: "NEW PASSWORD",
+      text: newPassword,
+    };
+    send();
+    async function send() {
+      const result = await transporter.sendMail(mailOptions);
+      console.log(result);
+    }
+  } catch (error) {}
+};
+
+export const changeUserInfo = async (req, res) => {
+  const { userId, updatedUserName, updatedPassword } =
+    req.body;
+  const updatedHashedPassword = await bcrypt.hash(updatedPassword, 10);
+  try {
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { userName: updatedUserName, hashedPassword: updatedHashedPassword }
+    );
+    return res.status(200).json({ message: "Succesfuly changed user info" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+// iz bodija dohvatiti email
+// pronaci tog usera pod tim emailom u bazi
+// promeijniti mu šifru u neku random
+// poslati mu tu šifru na mail

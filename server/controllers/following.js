@@ -1,13 +1,13 @@
 import User from "../models/user.js";
 import Post from "../models/post.js";
 
-export const addFavoritePost = async (req, res) => {
-  const { userId, postId } = req.body;
+export const addFollowedUser = async (req, res) => {
+  const { userId, followedUserId } = req.body;
 
   try {
     await User.findOneAndUpdate(
       { _id: userId },
-      { $push: { favoritePosts: postId } },
+      { $push: { followedUsers: followedUserId } },
       { new: true }
     );
     res.status(201).json();
@@ -16,13 +16,13 @@ export const addFavoritePost = async (req, res) => {
   }
 };
 
-export const deleteFavoritePost = async (req, res) => {
-  const { userId, postId } = req.params;
+export const removeFollowedUser = async (req, res) => {
+  const { userId, followedUserId } = req.params;
 
   try {
     await User.findOneAndUpdate(
       { _id: userId },
-      { $pull: { favoritePosts: postId } },
+      { $pull: { followedUsers: followedUserId } },
       { new: true }
     );
     res.status(201).json();
@@ -31,22 +31,22 @@ export const deleteFavoritePost = async (req, res) => {
   }
 };
 
-export const getFavoriteList = async (req, res) => {
+export const getFollowedUsersList = async (req, res) => {
   try {
     const { userId } = req.params;
-    let favoriteList = await User.findById(userId);
-    res.status(201).json(favoriteList);
+    let followingList = await User.findById(userId);
+    res.status(201).json(followingList);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
 
-export const getFavoritePosts = async (req, res) => {
+export const getFollowedPosts = async (req, res) => {
   try {
     const { userId } = req.params;
     let currentUser = await User.findById(userId).lean();
-    const favoriteList = currentUser.favoritePosts;
-    let posts = await Post.find({ _id: { $in: favoriteList } })
+    const followedUsersList = currentUser.followedUsers;
+    let posts = await Post.find({ userId: { $in: followedUsersList } })
       .populate("userId")
       .populate("comments")
       .populate({ path: "comments", populate: { path: "userId" } })

@@ -6,20 +6,40 @@ const Navigation = ({ user }) => {
 
   const navigateToFavorites = async () => {
     navigate("/favorites");
+    window.scrollTo(0, 0);
   };
   const navigateToPosts = async () => {
     navigate("/posts");
+    window.scrollTo(0, 0);
   };
   const navigateToRecommended = async () => {
-    navigate("/posts");
+    navigate("/followed-users");
+    window.scrollTo(0, 0);
+  };
+
+  const userInfo = () => {
+    navigate("/userInfo");
+    window.scrollTo(0, 0);
   };
 
   const logOut = () => {
     window.sessionStorage.removeItem("User");
     navigate("/");
   };
+
+  var prevScrollpos = window.pageYOffset;
+  window.onscroll = function () {
+    var currentScrollPos = window.pageYOffset;
+    if (prevScrollpos > currentScrollPos) {
+      document.getElementById("navigation").style.top = "0";
+    } else {
+      document.getElementById("navigation").style.top = "-50px";
+    }
+    prevScrollpos = currentScrollPos;
+  };
+
   return (
-    <div className="displayFlex">
+    <div id="navigation">
       <Button
         onClick={() => {
           navigateToPosts();
@@ -31,7 +51,7 @@ const Navigation = ({ user }) => {
         onClick={() => {
           navigateToRecommended();
         }}
-        label="Recommended"
+        label="Following"
         className="navigationLink"
       />
       <Button
@@ -46,6 +66,7 @@ const Navigation = ({ user }) => {
         {user.email}
         <span className="userStatus">{user.admin ? "Admin" : "User"}</span>
       </h3>
+      <Button className="navigationLink" label="User Info" onClick={userInfo} />
       <Button className="navigationLink" label="Log out" onClick={logOut} />
     </div>
   );

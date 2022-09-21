@@ -8,7 +8,6 @@ import React from "react";
 const ChangeForm = () => {
   const [toggle, setToggle] = useState(false);
   const [toastMessage, setToastMessage] = useState();
-  
 
   const destroy = () => {
     setToastMessage("");
@@ -18,11 +17,9 @@ const ChangeForm = () => {
     setToastMessage("Success: Sign up Successfull !");
   };
 
-
-
   return (
     <>
-      {toggle && (
+      {toggle ? (
         <RegisterForm
           toastMessage={toastMessage}
           setToastMessage={setToastMessage}
@@ -30,8 +27,9 @@ const ChangeForm = () => {
           toggle={toggle}
           setToggle={setToggle}
         />
+      ) : (
+        <LoginForm />
       )}
-      {!toggle && <LoginForm/>}
 
       <Button
         className="switchButton"

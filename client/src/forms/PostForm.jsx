@@ -22,6 +22,7 @@ const PostForm = ({ service, fetchPosts }) => {
       await service.post({
         content: content,
         userId,
+        timeStamp: new Date(),
       });
       fetchPosts();
       setContent(intialState);

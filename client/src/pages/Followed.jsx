@@ -1,47 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { useService } from "../contexts/ServiceProvider";
-import { Post, Navigation } from "../common/components";
+import { Navigation, Post } from "../common/components/";
 import { FaSadTear } from "react-icons/fa";
 
-const Favorites = () => {
-  const { favoriteRouteService } = useService();
-  const [favoritePosts, setFavoritePosts] = useState([]);
+const Followed = () => {
+  const { followedRouteService } = useService();
+  const [followedPosts, setFollowedPosts] = useState([]);
   const [user, setUser] = useState({});
 
   useEffect(() => {
-    fetchFavoritePosts();
+    fetchFollowedUsersPosts();
   }, []);
 
-  const fetchFavoritePosts = async () => {
+  const fetchFollowedUsersPosts = async () => {
     const userData = await JSON.parse(window.sessionStorage.getItem("User"));
     setUser(userData);
-    const response = await favoriteRouteService.getFavoritePosts(userData._id);
-    setFavoritePosts(response.data);
+    const response = await followedRouteService.getFollowedPosts(userData._id);
+    setFollowedPosts(response.data);
   };
 
   return (
     <>
       <Navigation user={user} />
-      {favoritePosts.length > 0 ? (
+      {followedPosts.length > 0 ? (
         <>
-          {favoritePosts.map((post) => (
+          {followedPosts.map((post) => (
             <Post
               data={post}
               user={user}
-              fetchFavoritePosts={fetchFavoritePosts}
+              fetchFollowedUsersPosts={fetchFollowedUsersPosts}
             />
           ))}
         </>
       ) : (
         <div class="noFavPostsWrap">
           <p class="noFavPostsText">There are no favorite posts</p>
-          <FaSadTear className="sadFav" />
+          <FaSadTear className="sadFav"/>
         </div>
       )}
     </>
   );
 };
 
-export default Favorites;
-
-//
+export default Followed;

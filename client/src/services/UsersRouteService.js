@@ -11,8 +11,13 @@ class UserRouteService extends Api {
   async postSignUp(payload) {
     return await axios.post(`${this.baseUrl}/signUp`, payload);
   }
+  async newPassword(payload) {
+    return await axios.post(`${this.baseUrl}/forgot-password`, payload);
+  }
+  async updateUser(payload) {
+    
+    return await axios.put(`${this.baseUrl}/change-user-info`, payload);
+  }
 }
 
 export default UserRouteService;
-
-

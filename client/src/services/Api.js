@@ -1,4 +1,5 @@
 import axios from "axios";
+import uritemplate from "uritemplate";
 
 class Api {
   baseUrl = "http://localhost:2000/";
@@ -7,8 +8,10 @@ class Api {
     this.baseUrl = this.baseUrl + endpoint;
   }
 
-  async get(payload) {
-    return await axios.get(this.baseUrl, payload);
+  async get(params) {
+    return await axios.get(
+      uritemplate.parse(this.baseUrl + "/{?page,pageSize}").expand(params)
+    );
   }
 
   async put(payload) {
@@ -19,9 +22,9 @@ class Api {
     return await axios.post(this.baseUrl, payload);
   }
 
-  async delete(payload) {
-    const baseUrl = this.baseUrl + payload;
-    return await axios.delete(baseUrl, payload);
+  async delete(params) {
+    const baseUrl = this.baseUrl + params;
+    return await axios.delete(baseUrl, params);
   }
 }
 

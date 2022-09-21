@@ -37,11 +37,10 @@ const Reply = ({
     });
     await fetchPosts();
   };
-
   return (
     <div className={className}>
       <div className="replyWrap">
-        <p className="repliedBy">{data.user.userName}</p>
+        <p className="repliedBy">{data.userId.userName}</p>
 
         <Input
           passDownRef={commentInputRef}
@@ -55,21 +54,22 @@ const Reply = ({
       <div className="displayFlex mt10">
         <p className="commentDate">{formatDate(data.timeStamp)}</p>
 
-        {(data.userId === user._id || user.admin) && (
-          <Button
-            className="secondaryButton"
-            label="delete"
-            onClick={() =>
-              deleteComment({
-                replyId: data._id,
-                postId: postId,
-                commentId: commentId,
-              })
-            }
-          />
-        )}
+        {data.userId._id === user._id ||
+          (user.admin && (
+            <Button
+              className="secondaryButton"
+              label="delete"
+              onClick={() =>
+                deleteComment({
+                  replyId: data._id,
+                  postId: postId,
+                  commentId: commentId,
+                })
+              }
+            />
+          ))}
 
-        {(data.userId === user._id || user.admin) && (
+        {(data.userId._id === user._id || user.admin) && (
           <Button
             className="secondaryButton"
             label={readOnly ? "edit" : "submit"}

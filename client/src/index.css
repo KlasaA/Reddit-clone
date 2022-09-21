@@ -150,7 +150,7 @@ button {
   color: #ffffff;
 }
 button:hover {
-  cursor: pointer;
+  cursor: pointer !important;
   background: #2b4458;
 }
 label {
@@ -171,6 +171,11 @@ label {
   color: red;
   font-size: 12px;
   margin-top: 16px;
+}
+.success {
+  color: green;
+  font-size: 12px;
+  margin-bottom: 16px;
 }
 h1 {
   color: #100c27;
@@ -214,22 +219,23 @@ h1 {
 
 .userEmail {
   float: right;
-  margin-right: 20px;
+  margin-right: 2px;
+  margin-left: 10px;
   width: 100%;
-  text-align: right;
-  font-weight: 700;
-  color: #100c27;
+
+  color: #ffff;
   font-family: "Invention";
   font-style: normal;
   font-weight: 400;
-  font-size: 32px;
+  font-size: 25px;
   line-height: 130%;
+  text-align: center;
 }
 .userStatus {
   font-size: 14px;
-  color: #477293;
+  color: white;
   font-weight: 700;
-  border-bottom: 2px solid #477293;
+  border-bottom: 2px solid white;
   margin-left: 10px;
 }
 .logOutButton {
@@ -274,7 +280,7 @@ input:focus {
   margin-top: 10px;
 }
 .deletePost {
-  cursor: pointer;
+  cursor: pointer !important;
   font-size: 28px;
   margin-top: auto;
   margin-bottom: auto;
@@ -308,7 +314,7 @@ input:focus {
 .eyeIcon {
   margin-top: auto;
   margin-bottom: auto;
-  cursor: pointer;
+  cursor: pointer !important;
   position: absolute;
   right: 0;
   top: 36px;
@@ -321,7 +327,7 @@ input:focus {
   font-size: 28px;
   margin-left: auto;
   margin-right: 20px;
-  cursor: pointer;
+  cursor: pointer !important;
   color: #477293;
   background-color: #f0f0f0;
   padding: 15px;
@@ -412,16 +418,15 @@ input:focus {
   border-radius: 10px;
 }
 .navigationLink {
-  color: #477293;
+  color: #ffff;
   margin-left: 10px;
   background-color: unset;
-  padding: 0px 10px;
+  padding: 0px 0px;
   font-size: 20px;
   width: 100%;
   max-width: 155px;
 }
 .navigationLink:hover {
-  color: #2b4458;
   background-color: unset;
   font-size: 22px;
   transition-duration: 0.25s;
@@ -430,7 +435,7 @@ input:focus {
   padding: 40px;
   background: white;
   border-radius: 20px;
-  margin-top: 50px;
+  margin-top: 100px;
 }
 .mlpl0 {
   margin-left: 0px;
@@ -455,7 +460,165 @@ input:focus {
 }
 .noFavPostsWrap {
   text-align: center;
-  margin-top: 50%;
+  margin-top: 400px;
   font-size: 50px;
-  transform: translateY(-150%);
+}
+.pagginationWrap {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  margin-top: 50px;
+  padding-bottom: 100px;
+}
+.pagginationButton {
+  border-radius: 50%;
+  padding: 0px;
+  height: 50px;
+  width: 50px;
+  margin-left: 10px;
+  background-color: white;
+  color: #477293;
+  border: 2px solid #477293;
+}
+.activeButton,
+.pagginationButton:hover {
+  background-color: #477293;
+  color: white;
+}
+#navigation {
+  background-color: #477293;
+  color: white;
+  position: fixed;
+  z-index: 999;
+  max-width: 860px;
+  margin-left: auto;
+  margin-right: auto;
+  display: inline-flex;
+  margin-left: 50%;
+  transform: translatex(-50%);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  transition: top 0.3s;
+}
+html {
+  margin-top: 0px;
+  background-color: #f5f5f5;
+}
+.navigationLink:active {
+  color: red !important;
+}
+.userInfo {
+  margin-top: 100px;
+}
+.readOnly {
+  display: none;
+}
+.sadFav {
+  margin-top: 20px;
+  color: #477293;
+}
+.follow,
+.unfollow {
+  background-color: unset;
+  padding: 10px;
+}
+
+.follow {
+  color: green;
+}
+
+.unfollow {
+  color: red;
+}
+
+.follow:hover {
+  color: rgb(11, 52, 11);
+  background-color: unset;
+}
+
+.unfollow:hover {
+  color: rgb(175, 34, 34);
+  background-color: unset;
+}
+@media only screen and (max-width: 900px) {
+  h1 {
+    font-size: 33px;
+  }
+  .favIcon,
+  .deletePost {
+    font-size: 25px;
+  }
+
+  .navigationLink {
+    font-size: 18px;
+  }
+  .userEmail {
+    font-size: 20px;
+  }
+  .userStatus {
+    font-size: 10px;
+  }
+
+  .commentedBy {
+    font-size: 19px;
+  }
+  .comment,
+  .commentDate,
+  .commentInput,
+  button {
+    font-size: 16px;
+  }
+  .Post {
+    max-width: 500px;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  h1 {
+    font-size: 30px;
+  }
+  .favIcon,
+  .deletePost {
+    font-size: 22px;
+  }
+  .navigationLink {
+    font-size: 16px;
+  }
+  .userEmail {
+    font-size: 18px;
+  }
+  .userStatus {
+    font-size: 8px;
+  }
+
+  .commentedBy {
+    font-size: 17px;
+  }
+  .comment,
+  .commentDate,
+  .commentInput,
+  button {
+    font-size: 14px;
+  }
+  .Post {
+    max-width: unset;
+    padding: 0px;
+  }
+  .postPadding {
+    padding: 5%;
+  }
+}
+
+@media only screen and (max-width: 450px) {
+  .postPadding {
+    padding: 3%;
+  }
+  .favIcon {
+    margin-right: 2%;
+    padding: 10px;
+  }
+  .deletePost {
+    padding: 10px;
+  }
 }

@@ -1,4 +1,5 @@
 import React, { useContext, useState, useRef } from "react";
+
 import { ServiceContext } from "../../contexts/ServiceProvider";
 import { Button, Input } from ".";
 import CreateReply from "./CreateReply";
@@ -7,6 +8,7 @@ import formatDate from "../../utils/formatDate";
 
 const Comment = ({ data, user, fetchPosts, postId }) => {
   const { commentRouteService } = useContext(ServiceContext);
+
   const [readOnly, setReadOnly] = useState(true);
   const [updatedComment, setUpdatedComment] = useState(data.content);
   const commentInputRef = useRef(null);
@@ -22,7 +24,6 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
 
   const handleReadOnly = async () => {
     setReadOnly(!readOnly);
-    debugger;
     commentInputRef.current.focus();
   };
 
@@ -39,7 +40,7 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
   return (
     <div>
       <div className="commentWrap">
-        <p className="commentedBy">{data?.user?.userName}</p>
+        <p className="commentedBy">{data?.userId?.userName}</p>
 
         <Input
           passDownRef={commentInputRef}
@@ -53,14 +54,14 @@ const Comment = ({ data, user, fetchPosts, postId }) => {
       <div className="displayFlex mt10">
         <p class="commentDate">{formatDate(data?.timeStamp)}</p>
 
-        {data.userId === user._id && (
+        {(data.userId._id === user._id || user.admin) && (
           <Button
             className="secondaryButton"
             label={readOnly ? "Edit" : "Submit"}
             onClick={() => (readOnly ? handleReadOnly() : editComment())}
           />
         )}
-        {(data.userId === user._id || user.admin) && (
+        {(data.userId._id === user._id || user.admin) && (
           <Button
             className="secondaryButton"
             label="Delete"
