@@ -36,7 +36,6 @@ const LoginForm = () => {
       navigate("/posts");
     } catch (error) {
       console.log(error);
-      setErrorMesage(error.response.data.message);
     }
   };
 
@@ -67,7 +66,8 @@ const LoginForm = () => {
             {passwordShown && (
               <FaEyeSlash onClick={passwordToggle} className="eyeIcon" />
             )}
-            {!passwordShown && (<FaEye onClick={passwordToggle} className="eyeIcon" />
+            {!passwordShown && (
+              <FaEye onClick={passwordToggle} className="eyeIcon" />
             )}
           </div>
 

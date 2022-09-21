@@ -15,7 +15,6 @@ class UserRouteService extends Api {
     return await axios.post(`${this.baseUrl}/forgot-password`, payload);
   }
   async updateUser(payload) {
-    
     return await axios.put(`${this.baseUrl}/change-user-info`, payload);
   }
 }

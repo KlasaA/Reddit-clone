@@ -2,7 +2,7 @@ import axios from "axios";
 import uritemplate from "uritemplate";
 
 class Api {
-  baseUrl = "http://localhost:2000/";
+  baseUrl = "https://social-network-posting.herokuapp.com/";
 
   constructor(endpoint) {
     this.baseUrl = this.baseUrl + endpoint;

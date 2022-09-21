@@ -9,7 +9,7 @@ const RegisterForm = ({ handleToastMessage, toggle, setToggle }) => {
     email: "",
     password: "",
     confirmPassword: "",
-    admin: true,
+    admin: false,
   });
   const [errorMesage, setErrorMesage] = useState("");
   const { userRouteService } = useContext(ServiceContext);
@@ -37,7 +37,7 @@ const RegisterForm = ({ handleToastMessage, toggle, setToggle }) => {
       handleToastMessage();
       setToggle(!toggle);
     } catch (error) {
-      setErrorMesage(error.response.data.message);
+      console.log(error);
     }
   };
 

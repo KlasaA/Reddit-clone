@@ -7,14 +7,18 @@ import commentRoute from "./routes/comment.js";
 import favoriteRoute from "./routes/favorite.js";
 import followingRoute from "./routes/following.js";
 import bodyParser from "body-parser";
-require("dotenv").config();
+import dotenv from "dotenv";
 
 const app = express();
+dotenv.config();
 
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
 app.use(cors());
+app.get("/", (req, res) => {
+  res.send("app is running");
+});
 
 app.use("/users", userRoutes);
 app.use("/posts", postRoute);
@@ -22,8 +26,8 @@ app.use("/comments", commentRoute);
 app.use("/favorites", favoriteRoute);
 app.use("/following", followingRoute);
 
-app.listen(process.env.PORT || 2000, () =>
-  console.log("Example app listening on port 2000!")
+app.listen(process.env.PORT || 4000, () =>
+  console.log("PORT:", process.env.PORT)
 );
 
 mongoose.connect(

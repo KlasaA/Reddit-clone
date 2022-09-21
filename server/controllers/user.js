@@ -52,6 +52,7 @@ export const signIn = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
   const newPassword = Math.random().toString(36).slice(-8);
+
   const hashedNewPassowrd = await bcrypt.hash(newPassword, 10);
   try {
     await User.findOneAndUpdate(
@@ -80,12 +81,12 @@ export const forgotPassword = async (req, res) => {
       const result = await transporter.sendMail(mailOptions);
       console.log(result);
     }
+    return res.status(200).json(newPassword);
   } catch (error) {}
 };
 
 export const changeUserInfo = async (req, res) => {
-  const { userId, updatedUserName, updatedPassword } =
-    req.body;
+  const { userId, updatedUserName, updatedPassword } = req.body;
   const updatedHashedPassword = await bcrypt.hash(updatedPassword, 10);
   try {
     await User.findOneAndUpdate(

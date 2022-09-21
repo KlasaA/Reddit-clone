@@ -12,9 +12,10 @@ const ForgotPassword = ({ toggle, setToggle }) => {
   const sendNewPassword = async (e) => {
     e.preventDefault();
 
-    await userRouteService.newPassword({
+    const res = await userRouteService.newPassword({
       email: email,
     });
+    alert(res.data);
   };
 
   return (
@@ -39,7 +40,7 @@ const ForgotPassword = ({ toggle, setToggle }) => {
           onClick={(e) => sendNewPassword(e)}
           type="submit"
           className="--button"
-          label="Send password na mail"
+          label="Create new password"
         />
       </form>
     </>
